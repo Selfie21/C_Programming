@@ -1,29 +1,40 @@
 #include <stdio.h>
-#include <string.h>
 
-int expand(char s[], char t[]);
+void expand(const char s1[], char s2[]);
+int isalpha(int c);
 
-int main(){
-    char s[] = "a-z blabla hello my name is";
-    char t[100];
-
+int main(void)
+{
+        char str[1000];
+        expand("-a-z testing a-f a-b-c A-Za-z0-9 testing 5-9 a-d-f 1-3-6-9", str);
+        printf("%s\n", str);
+        return 0;
 }
 
-int expand(char s[], char t[]){
-    int i;
+void expand(const char s1[], char s2[])
+{
+        int i, j, k;
+        int end = 0;
 
-    for(i = 0; s[i] != '\0'; i++){
-        if(s[i] == '-' ){
-            char start = s[--i];
-            char end = s[i+=2];
-            printf("%c        %c\n", start, end);
-            switch(start){
-                case ((s[i] >= 'a') && (s[i] <= 'z')):
-                    for(j = i; t[j] != (end + 1); j++){
-                        t[j] = start++;
-                    }
-                    break;
-            }
+        for (i = j = 0; s1[i] != '\0'; i++) {
+                if (isalpha(s1[i]) && s1[i+1] == '-' && isalpha(s1[i+2]) && s1[i+2]-s1[i] > 1) {
+                        for (k = end ? 1 : 0; s1[i]+k <= s1[i+2]; k++) {
+                                s2[j++] = s1[i] + k;
+                        }
+                        end = 1;
+                        i++;
+                } else {
+                        if (end) {
+                                end = 0;
+                                ++i;
+                        }
+                        s2[j++] = s1[i];
+                }
         }
-    }
+        s2[j] = '\0';
+}
+
+int isalpha(int c)
+{
+        return ((c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z'));
 }
