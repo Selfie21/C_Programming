@@ -14,6 +14,8 @@ double pop(void);
 int getch(void);
 void ungetch(int);
 void viewstack(void);
+void duplicate(void);
+void swapItems(void);
 
 int bufp = 0;
 char buf[BUFSIZE];
@@ -88,6 +90,28 @@ void viewstack(void)
 		printf("%lf\n", val[i]);
 }
 
+void duplicate(void)
+{
+	double temp = pop();
+
+	push(temp);
+	push(temp);
+}
+
+void swapItems(void)
+{
+	double item1 = pop();
+	double item2 = pop();
+
+	push(item1);
+	push(item2);
+}
+
+void clearStack(void)
+{
+	sp = 0;
+}
+
 int main()
 {
 	int type;
@@ -129,12 +153,15 @@ int main()
 			case '\n':
 				printf("\t%.8g\n", pop());
 				break;
-      case 's':
-        printf("Switching top 2 values...");
-        break;
-      case 'c':
-        printf("Clearing Stack...");
-        break;
+			case 'd':
+				duplicate();
+				break;
+			case 'c':
+				clearStack();
+				break;
+			case 's':
+				swapItems();
+				break;
 			default:
 				printf("error: unknown command %s\n", s);
 				break;
